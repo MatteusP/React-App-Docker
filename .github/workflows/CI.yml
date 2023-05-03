@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    
+  workflow_dispatch:
+  
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+        - name: Checkout repository
+          uses: actions/checkout@v3  #Esta ação verifica seu repositório, para que seu fluxo de trabalho possa acessá-lo 
+        
+        - name: Set up Node.js 16.x
+          uses: actions/setup-node@v3 #baixa e armazena em cache a distribuição da versão Node.js solicitada e adiciona ao PATH
+          with:
+            node-version: 16.x
+            
+        - name: Run the tests
+          run: npm run test -- --coverage
+          env: 
+            CI: true
+         
