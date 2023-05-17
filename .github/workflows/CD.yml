@@ -109,8 +109,8 @@ jobs:
 
       - name: Deploy to Non-Prod
         run: |
-          ssh google-cloud-non-prod 'sudo systemctl stop react-app-hmg'
-          ssh google-cloud-non-prod 'sudo rm -rf /app/react-app-hmg'
-          scp -r build google-cloud-non-prod:/home/github/react-app-hmg'
-          ssh google-cloud-non-prod 'sudo mv /home/github/react-app-non-prod /app/react-app-hmg'
-          ssh google-cloud-non-prod '/usr/bin/npx serve /app/react-app-hmg -p 8080'
+          ssh google-cloud 'sudo systemctl stop react-app-hmg'
+          ssh google-cloud 'sudo rm -rf /app/react-app-hmg'
+          scp -r build google-cloud:/home/github/react-app-hmg'
+          ssh google-cloud 'sudo mv /home/github/react-app-hmg /app/react-app-hmg'
+          ssh google-cloud '/usr/bin/npx serve /app/react-app-hmg -p 8080'
