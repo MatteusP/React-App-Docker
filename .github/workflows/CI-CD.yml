@@ -1,4 +1,4 @@
-name: Build, Push and Deploy
+name: Build and Deploy
 
 on:
   push:
@@ -13,12 +13,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
+          file: ./docker-compose.yml
+          platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/react-app:${{ github.sha }}
 
       - name: SSH into remote machine
         uses: appleboy/ssh-action@master
