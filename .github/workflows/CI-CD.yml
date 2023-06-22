@@ -1,0 +1,35 @@
+name: Build, Push and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/myapp:${{ github.sha }}
+
+      - name: SSH into remote machine
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Pull and deploy Docker image on remote machine
+        run: |
+          ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} \
+            "docker-compose pull"
+          ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} \
+            "docker-compose up -d"
