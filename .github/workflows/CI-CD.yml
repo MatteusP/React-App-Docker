@@ -41,7 +41,7 @@ jobs:
           username: ${{ secrets.REMOTE_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Pull and deploy Docker image on remote machine
+      - name: Pull and deploy Docker image on remote
         run: |
           ssh ${{ secrets.REMOTE_USERNAME }}@${{ secrets.REMOTE_HOST }} \
             "docker-compose pull"
